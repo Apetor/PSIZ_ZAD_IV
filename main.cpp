@@ -5,6 +5,20 @@
 #include <stdexcept>
 
 using namespace std;
+
+Miara OH(Miara h1, Miara h2)
+{
+    Miara x = h1 ^ h2;
+    Miara setBits = 0;
+    while (x > 0)
+    {
+        B += x & 1;
+        x >>= 1;
+    }
+    return B;
+}
+
+
 int main(int argc, char** argv) {
  unique_ptr<logging> log;
   try {
