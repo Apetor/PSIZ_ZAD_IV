@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+Using namespace std;
 struct berResults
 {
     double tot;
