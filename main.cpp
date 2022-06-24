@@ -2,25 +2,27 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-Using namespace std;
+using namespace std;
 struct berResults
 {
     double tot;
-    double err; 
-    float ber;  
-    clock_t t1; 
-    clock_t t2; 
+    double err;
+    float ber;
+    clock_t t1;
+    clock_t t2;
 };
 Mechanizm Hamminga(Mechanizm m1, Mechanizm m2);
 void StworzPlik(const string nazwa, const int licznik, const char wartosc);
 WynikBER ObliczBER(string Splik1, string Splik2);
 void WyswietlWynik(WynikBER Wynik);
 Mechanizm Hamminga(Mechanizm m1, Mechanizm m2)
-void OtoworzLOG(string NazwaPliku);
-void ZapiszLOG(string msg);
-void Zamknij(void);
+void OtoworzLOG(string NazwaPliku)
+void ZapiszLOG(string msg)
+void Zamknij(void)
+
+Mechanizm Hamminga(Mechanizm m1, Mechanizm m2)
 {
-    Mechanizm x = m1 ^ m2; 
+    Mechanizm x = m1 ^ m2;
     Mechanizm UstawBit = 0;
     while (x > 0)
     {
@@ -35,7 +37,7 @@ void StworzPlik(const string nazwa, const int licznik, const char wartosc)
     P.open(nazwa.c_str(), ios::binary | ios::out);
     for (int i = 0; i < licznik; i++)
     {
-        P.write((char*)&wartosc,1);
+        P.write((char*)&wartosc, 1);
     }
     P.close();
 }
@@ -48,7 +50,7 @@ WynikBER ObliczBER(string Splik1, string Splik2)
     Wynik.ber = 0;
     Wynik.err = 0;
     Wynik.tot = 0;
-    saveLog("Obliczanie BER");
+    ZapiszLOG("Obliczanie BER");
     P1.open(Splik1.c_str(), ios::binary | ios::in);
     P2.open(Splik2.c_str(), ios::binary | ios::in);
     char a = 0x00;
@@ -56,18 +58,18 @@ WynikBER ObliczBER(string Splik1, string Splik2)
     Wynik.t1 = clock();
     while (!P1.eof())
     {
-        P1 >> a; 
-        P2 >> b; 
-        if (!P1.eof()) 
+        P1 >> a;
+        P2 >> b;
+        if (!P1.eof())
         {
             Wynik.err += Hamminga(a, b);
-            Wynik.tot += 8; 
+            Wynik.tot += 8;
         }
     }
     Wynik.ber = (float)Wynik.err / Wynik.tot;
-    Wynik.t2 = clock(); 
+    Wynik.t2 = clock();
     ZapiszLOG("Wykonano obliczenia BER");
-    return Wynik; 
+    return Wynik;
 }
 void WyswietlWynik(WynikBER Wynik)
 {
@@ -79,7 +81,7 @@ void WyswietlWynik(WynikBER Wynik)
     message << "Czas obliczen: " << ((float)Wynik.t2 - Wynik.t1) / CLOCKS_PER_SEC << " sec " << endl;
     ZapiszLOG(message.str());
 }
-fstream PlikLOG; 
+fstream PlikLOG;
 void OtworzLOG(string NazwaPliku)
 {
     PlikLOG.open(NazwaPliku.c_str(), ios_base::app);
@@ -102,29 +104,29 @@ void ZapiszLOG(string msg)
     string txttime = (string)asctime(localtime(&currentTime));
     txttime = txttime.substr(0, txttime.length() - 1);
     ss = (string)"T: " + txttime + " M: " + msg + "\n";
-    logFile << ss.c_str();
-    logFile.flush();
+    PlikLOG << ss.c_str();
+    PlikLOG.flush();
     cout << ss.c_str();
     cout.flush();
 }
-int main(int argc, char * argv[])
+int main(int argc, char* argv[])
 {
-    string Splik1; 
-    string Splik2; 
-    WynikBER Wynik; 
-    OtworzLOG("log.log"); 
+    string Splik1;
+    string Splik2;
+    WynikBER Wynik;
+    OtworzLOG("log.log");
     if (argc != 3)
     {
         ZapiszLOG("Tworzenie plikow testowych");
         StworzPlik("Plik1.bin", 100, 0xFF);
         StworzPlik("Plik2.bin", 100, 0xFE);
-        //StworzPlik("Plik1.bin", 1000, 0xFF); 
-        //StworzPlik("Plik2.bin", 1000, 0xFE); 
+        //StworzPlik("Plik1.bin", 100, 0xFF); 
+        //StworzPlik("Plik2.bin", 100, 0xFD); 
         //StworzPlik("Plik1.bin",400000000,0x55); 
         //StworzPlik("Plik2.bin",400000000,0x50);
-        ZapiszLOG("Pliki testowe sa gotowe");       
+        ZapiszLOG("Pliki testowe sa gotowe");
     }
-    else 
+    else
     {
         Splik1 = argv[1];
         Splik2 = argv[2];
